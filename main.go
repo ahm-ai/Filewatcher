@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 
 	"github.com/fsnotify/fsnotify"
@@ -32,6 +33,23 @@ func main() {
 		log.Fatal(err)
 	}
 	defer watcher.Close()
+
+	// Recursive function to watch directories
+	watchDir := func(path string, fileInfo os.FileInfo, err error) error {
+		// Skip node_modules directory
+		if fileInfo.IsDir() {
+			if fileInfo.Name() == "node_modules" {
+				return filepath.SkipDir
+			}
+			return watcher.Add(path)
+		}
+		return nil
+	}
+
+	// Traverse the directory and watch each subdirectory
+	if err := filepath.Walk(*pathFlag, watchDir); err != nil {
+		log.Fatal(err)
+	}
 
 	done := make(chan bool)
 	var cmd *exec.Cmd
@@ -81,11 +99,6 @@ func main() {
 			}
 		}
 	}()
-
-	err = watcher.Add(*pathFlag)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	<-done
 }
