@@ -3,8 +3,14 @@
 
 ### Example for NodeJs.
  ```sh
-   COMMAND_NAME="echo 'hi'"
-    go run main.go --path="<PATH>" --regex=".*\\.js$" --command=$COMMAND_NAME
+
+   COMMAND_NAME="
+     echo 'Multi'; \
+     echo 'Line'; \
+     listTor 
+   "
+
+    go run main.go --path="<ABSOLUTE_PATH>" --regex=".*\\.js$" --command=$COMMAND_NAME
  ```
 
 
