@@ -8,4 +8,3 @@ setInterval(() => {
 }, 500);
 
 console.log("::: COMPLETED :::");
-
